@@ -22,7 +22,9 @@ def getCalendar(secretsPath, timezone, choice):
     tz = pytz.timezone(timezone)
 
     # setting the start and end time
+    # default start and end time which is today
     today = datetime.today()
+    print(today)
     start = datetime.combine(today, time.min).astimezone(tz)
     end = start + timedelta(days=1)
 
@@ -41,6 +43,7 @@ def getCalendar(secretsPath, timezone, choice):
                                timeMin=start.isoformat(),
                                timeMax=end.isoformat(),
                                singleEvents=True,
+                               timeZone=timezone,
                                orderBy='startTime').execute()
 
     # getting a list of events
@@ -59,5 +62,5 @@ def printEvents(events):
 
 # getting the program arguments
 args = sys.argv
-events = getCalendar('client_secret.json', args[2], args[1])
+events = getCalendar('client_secret.json', args[1], args[2])
 printEvents(events)
