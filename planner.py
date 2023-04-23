@@ -7,8 +7,30 @@ from datetime import datetime, time, timedelta
 import pytz
 import sys
 
+class WrongArgumentException(Exception):
+    pass
+
 
 def getCalendar(secretsPath, timezone, choice):
+    tz = pytz.timezone(timezone)
+
+    # setting the start time, end time is relative to start
+    today = datetime.today()
+    start = datetime.combine(today, time.min).astimezone(tz)  
+    
+    if choice == 'rest':
+        end = start + timedelta(days=7-today.date().weekday())
+    elif choice == 'week':
+        start = start - timedelta(days=today.date().weekday())
+        end = start + timedelta(days=7)
+    elif choice == 'nextweek':
+        start = start + timedelta(days=7-today.date().weekday())
+        end = start + timedelta(days=7)
+    elif choice == 'today':
+        end = start + timedelta(days=1)
+    else:
+        raise WrongArgumentException("Wrong input for the second parameter.")
+
     # defines how to access the user's api
     scopes = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -18,25 +40,6 @@ def getCalendar(secretsPath, timezone, choice):
 
     # create an instance of a google api client
     cal = build('calendar', 'v3', credentials=creds)
-
-    tz = pytz.timezone(timezone)
-
-    # setting the start and end time
-    # default start and end time which is today
-    today = datetime.today()
-    print(today)
-    start = datetime.combine(today, time.min).astimezone(tz)
-    end = start + timedelta(days=1)
-
-    if choice == 'rest':
-        end += timedelta(days=6-today.date().weekday())
-    elif choice == 'week':
-        start -= timedelta(days=today.date().weekday())
-        end += timedelta(days=6-today.date().weekday())
-    elif choice == 'nextweek':
-        start -= timedelta(days=today.date().weekday())
-        start += timedelta(days=7)
-        end = start + timedelta(days=7)
 
     # fetching the events
     events = cal.events().list(calendarId='ekm7p8j@gmail.com',
@@ -52,15 +55,25 @@ def getCalendar(secretsPath, timezone, choice):
 
 def printEvents(events):
     if not events:
-        print("No events found.")
+        print('No events found.')
     else:
         for i in range(0, len(events)):
             event_start = events[i]['start'].get('dateTime', events[i]['start'].get('date'))
             event_start = datetime.fromisoformat(event_start).strftime('%I:%M %p')
-            print(str(i + 1) + '. ' + events[i]['summary'] + " at " + event_start)
+            print(str(i + 1) + '. ' + events[i]['summary'] + ' at ' + event_start)
 
 
 # getting the program arguments
 args = sys.argv
-events = getCalendar('client_secret.json', args[1], args[2])
+
+if len(args) != 3:
+    print('Invalid number of parameters: expected 2')
+    sys.exit(1)
+
+try:
+    events = getCalendar('client_secret.json', args[1], args[2])
+except WrongArgumentException as e:
+    print(e)
+    sys.exit(1)
+
 printEvents(events)
