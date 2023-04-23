@@ -29,7 +29,7 @@ def getCalendar(secretsPath, timezone, choice):
     elif choice == 'today':
         end = start + timedelta(days=1)
     else:
-        raise WrongArgumentException("Wrong input for the second parameter.")
+        raise WrongArgumentException('Wrong input for the second parameter.')
 
     # defines how to access the user's api
     scopes = ['https://www.googleapis.com/auth/calendar.readonly']
