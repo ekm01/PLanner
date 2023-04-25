@@ -55,7 +55,7 @@ def getCalendar(secretsPath, timezone, choice):
     cal = build('calendar', 'v3', credentials=creds)
 
     # printing the events day by day
-    for i in range(0, loopEnd):
+    for i in range(loopEnd):
         startl = start + timedelta(days=i)
         endl = startl + timedelta(days=1)
 
