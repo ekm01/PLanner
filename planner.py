@@ -85,6 +85,9 @@ def main():
     except WrongArgumentException as e:
         print(e)
         sys.exit(1)
+    except pytz.UnknownTimeZoneError:
+        print('Invalid time zone')
+        sys.exit(1)
 
 
 main()
