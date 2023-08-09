@@ -1,5 +1,3 @@
-#!/home/binotto/.virtualenvs/googleapi_venv/bin/python3
-
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -46,7 +44,7 @@ def getCalendar(secretsPath, timezone, choice):
 
     # defines how to access the user's api
     scopes = ['https://www.googleapis.com/auth/calendar.readonly']
-
+    
     # authentication of the user and fetching the creds
     flow = InstalledAppFlow.from_client_secrets_file(secretsPath, scopes)
     creds = flow.run_local_server(port=0)
