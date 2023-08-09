@@ -73,9 +73,12 @@ def getCalendar(secretsPath, timezone, choice):
 # getting the program arguments
 def main():
     args = sys.argv
+    if args[1] == 'help':
+        print('Usage: python3 planner.py [1.param: timezone] [2.param: today, week, rest, nextweek]')
+        sys.exit(1)
 
     if len(args) != 3:
-        print('Invalid number of parameters: expected 2')
+        print('Invalid number of parameters: expected 2. You can use the help option for usage.')
         sys.exit(1)
 
     try:
