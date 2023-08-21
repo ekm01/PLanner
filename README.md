@@ -1,2 +1,2 @@
 # PLanner
-A simple app for displaying weekly schedule using Google Calender API
+A simple CLI app for displaying weekly schedule using Google Calender API
